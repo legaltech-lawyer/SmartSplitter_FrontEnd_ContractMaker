@@ -105,12 +105,12 @@ const SmartSplitterFactory = () => {
 
     const getContractsMade = async () => {
         const contractsMade = await contract.contractsStored()
-        // console.log(contractsMade.toString())
+
         const stringContractsMade = contractsMade.toString()
         const stringContractsMadeNum = parseInt(contractsMade)
         setContractsMade(stringContractsMade)
         const mostRecentContractAddress = await contract.getAddressFromIndex(stringContractsMadeNum - 1)
-        console.log(mostRecentContractAddress)
+        console.log("Most Recent SmartSplitter Contract At:" + mostRecentContractAddress)
         setMostRecentContract(mostRecentContractAddress)
 
     }
@@ -160,7 +160,6 @@ const SmartSplitterFactory = () => {
         let payeeRatioBoxes = document.querySelectorAll("#setPayRatio")
         let payeeRatioArray = []
         for (let i = 0; i < payeeRatioBoxes.length; i++) {
-            console.log((payeeRatioBoxes[i].value))
             payeeRatioArray.push(parseInt(payeeRatioBoxes[i].value))
         }
         setPayeeRatio(payeeRatioArray)
@@ -180,7 +179,6 @@ const SmartSplitterFactory = () => {
 
         try {
             const tx = await contract.createSmartSplitterContract(payees, payeeratio)
-            console.log(tx.hash)
             let hash = tx.hash
             setTxHash(hash.toString())
             isTransactionMined(hash.toString())
@@ -217,7 +215,7 @@ const SmartSplitterFactory = () => {
                 setPreviewContract(false)
                 console.log("block number assigned.")
                 transactionBlockFound = true
-                console.log("COMPLETE BLOCK: " + tx.blockNumber.toString())
+                console.log("COMPLETED BLOCK: " + tx.blockNumber.toString())
 
                 //check balance of user wallet
 
@@ -299,7 +297,7 @@ const SmartSplitterFactory = () => {
                         <Box>
                             <h3>Address: {defaultAccount}</h3>
                             <h3>Wallet Balance: {walletBalance}</h3>
-                            <h3>Most Recent Contract Minted: {mostrecentcontract}</h3>
+                            <h3>Most Recent SmartSplitter Contract Minted At: {mostrecentcontract}</h3>
                         </Box>
 
                     </>
