@@ -5,7 +5,7 @@ import SmartSplitterFactoryABI from "../chain-info/contracts/SmartSplitterFactor
 
 const SmartSplitterFactory = () => {
 
-    const smartSplitterFactoryAddress = "0x182a028Bb00d40Df0687D32724D625e0821222f7"
+    const smartSplitterFactoryAddress = "0xb4B1580046F0b8574d43bf5ecAf80CB5c5d0230A"
     const { abi } = SmartSplitterFactoryABI
 
     const [connButtonText, setConnButtonText] = useState('Connect Wallet');
@@ -47,10 +47,15 @@ const SmartSplitterFactory = () => {
 
     const checkAccountType = (newAccount) => {
         if (Array.isArray(newAccount)) {
+            console.log("there")
             return newAccount[0].toString()
         }
         else {
+
+            console.log(newAccount)
+            console.log("within")
             return newAccount
+
         }
     }
 
@@ -96,7 +101,7 @@ const SmartSplitterFactory = () => {
 
     const getWalletBalance = async (provider) => {
         // Look up the balance
-        if (provider !== null && !processing) {
+        if (provider !== null && !processing && defaultAccount !== null) {
             let balance = await provider.getBalance(defaultAccount);
             setWalletBalance(ethers.utils.formatEther(balance))
         }
@@ -104,15 +109,16 @@ const SmartSplitterFactory = () => {
     }
 
     const getContractsMade = async () => {
-        const contractsMade = await contract.contractsStored()
+        if (contract != null) {
+            const contractsMade = await contract.contractsStored()
 
-        const stringContractsMade = contractsMade.toString()
-        const stringContractsMadeNum = parseInt(contractsMade)
-        setContractsMade(stringContractsMade)
-        const mostRecentContractAddress = await contract.getAddressFromIndex(stringContractsMadeNum - 1)
-        console.log("Most Recent SmartSplitter Contract At:" + mostRecentContractAddress)
-        setMostRecentContract(mostRecentContractAddress)
-
+            const stringContractsMade = contractsMade.toString()
+            const stringContractsMadeNum = parseInt(contractsMade)
+            setContractsMade(stringContractsMade)
+            const mostRecentContractAddress = await contract.getAddressFromIndex(stringContractsMadeNum - 1)
+            console.log("Most Recent SmartSplitter Contract At:" + mostRecentContractAddress)
+            setMostRecentContract(mostRecentContractAddress)
+        }
     }
 
 
@@ -132,14 +138,16 @@ const SmartSplitterFactory = () => {
     }, [accountchanging])
 
     useEffect(() => {
+
         getWalletBalance(provider)
 
     }, [provider])
 
     useEffect(() => {
         if (contract !== null) {
-
-            getContractsMade()
+            if (mostrecentcontract !== null) {
+                getContractsMade()
+            }
             setAccountChanging(false)
 
         }
@@ -297,7 +305,10 @@ const SmartSplitterFactory = () => {
                         <Box>
                             <h3>Address: {defaultAccount}</h3>
                             <h3>Wallet Balance: {walletBalance}</h3>
-                            <h3>Most Recent SmartSplitter Contract Minted At: {mostrecentcontract}</h3>
+                            {
+                                mostrecentcontract ? (<h3>Most Recent SmartSplitter At: {mostrecentcontract}</h3>) : (null)
+                            }
+
                         </Box>
 
                     </>
