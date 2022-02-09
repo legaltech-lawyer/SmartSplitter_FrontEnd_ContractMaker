@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, CircularProgress, Box, TextField, Snackbar, Alert, Link } from "@mui/material"
+import { List, ListItem, ListItemText, Button, Container, CircularProgress, Box, TextField, Snackbar, Alert, Link, Typography, Card, CardContent, TableContainer, TableHead, Table, TableRow, TableCell, TableBody } from "@mui/material"
 import { ethers, constants, utils } from 'ethers'
 import SmartSplitterFactoryABI from "../chain-info/contracts/SmartSplitterFactory.json"
 
@@ -165,6 +165,7 @@ const SmartSplitterFactory = () => {
     }
 
     const handleRatioChange = (event) => {
+        event.preventDefault()
         let payeeRatioBoxes = document.querySelectorAll("#setPayRatio")
         let payeeRatioArray = []
         for (let i = 0; i < payeeRatioBoxes.length; i++) {
@@ -174,9 +175,11 @@ const SmartSplitterFactory = () => {
     }
 
     const previewContract = (event) => {
+        event.preventDefault()
         setPreviewContract(true)
     }
     const handlePreviewContractClose = (event) => {
+        event.preventDefault()
         setPreviewContract(false)
         setPayees(null)
         setPayeeRatio(null)
@@ -240,6 +243,7 @@ const SmartSplitterFactory = () => {
     }
 
     const createContractEvent = (event) => {
+        event.preventDefault()
         createContract()
     }
 
@@ -252,28 +256,46 @@ const SmartSplitterFactory = () => {
             }
         }
         return (
-            <div>
-                <h1>Contract Summary:</h1>
-                {
-                    formatted.map((item) => {
-                        itemCount++;
-                        return (
-                            <li key={itemCount}>{item}</li>
-                        )
-                    })
-                }
-                <Box p={5}>
+            <Box>
+
+
+                <Card variant="outlined" sx={{ display: 'inline-block', backgroundColor: "lightgoldenrodyellow" }}>
+                    <Typography sx={{ fontSize: 20, fontWeight: 600 }} variant="h1">Contract Summary:</Typography>
+                    <List >
+                        {
+                            formatted.map((item) => {
+                                itemCount++;
+                                return (
+                                    <ListItem key={itemCount} >
+                                        <ListItemText > {item}</ListItemText>
+                                    </ListItem>
+                                )
+                            })
+                        }
+                    </List>
+
                     {
                         !processing ? (
-                            <>
-                                <Button color="success" variant="contained" onClick={createContractEvent}>Create Contract</Button>
-                                <Button color="error" variant="contained" onClick={handlePreviewContractClose}>Edit Contract</Button></>) :
+                            <Box>
+                                <Box p={1}>
+                                    <Button color="success" variant="contained" onClick={createContractEvent}>Create Contract</Button>
+                                </Box>
+
+                                <Box p={1}>
+                                    <Button color="error" variant="contained" onClick={handlePreviewContractClose}>Cancel Contract</Button>
+                                </Box>
+
+                            </Box>
+
+                        ) :
+
                             (<CircularProgress size={26} color="error" />)
                     }
 
-                </Box>
 
-            </div>
+
+                </Card>
+            </Box>
 
         )
     }
@@ -287,9 +309,8 @@ const SmartSplitterFactory = () => {
 
     return (
         <>
-
             <Box>
-                <Button onClick={connectWalletHandler} color="error" variant="contained">{connButtonText}</Button>
+                <Button onClick={connectWalletHandler} color="primary" variant="contained" sx={{ margin: 2 }}>{connButtonText}</Button>
             </Box>
 
             <Snackbar open={transactionPosted} autoHideDuration={8000} onClose={handleCloseSnack}>
@@ -302,74 +323,78 @@ const SmartSplitterFactory = () => {
                 defaultAccount ? (
 
                     <>
-                        <Box>
-                            <h3>Address: {defaultAccount}</h3>
-                            <h3>Wallet Balance: {walletBalance}</h3>
-                            {
-                                mostrecentcontract ? (<h3>Most Recent SmartSplitter At: {mostrecentcontract}</h3>) : (null)
-                            }
-
-                        </Box>
+                        <Card variant="outlined" sx={{ display: 'inline-block', backgroundColor: "beige" }}>
+                            <CardContent>
+                                <Typography variant="h3" sx={{ fontSize: 15 }}>Address: {defaultAccount}</Typography>
+                                <Typography variant="h3" sx={{ fontSize: 15 }}>Wallet Balance: {walletBalance}</Typography>
+                                {
+                                    mostrecentcontract ? (<Typography variant="h3" sx={{ fontSize: 15 }} color="red">Most Recent SmartSplitter: {mostrecentcontract}</Typography>) : (null)
+                                }
+                            </CardContent>
+                        </Card>
 
                     </>
 
                 ) :
                     (
-                        <div>
+                        <Typography>
                             {errorMessage}
-                        </div>
+                        </Typography>
                     )
             }
 
             {
                 contract && !previewcontract ? (
                     <Box>
-                        <h1>Create SmartSplitter Contract:</h1>
-                        <form >
-                            <Box p={3}>
-                                <h3>Payee Addresses (note: comma seperated):</h3>
+                        <Card variant="outlined" sx={{ display: 'inline-block', backgroundColor: "lightgoldenrodyellow" }}>
+                            <Typography variant="h1" sx={{ fontSize: 20, fontWeight: 600 }}>Create SmartSplitter Contract:</Typography>
 
-                                <TextField id="setAddress" variant="filled" onChange={handleAddressChange} ></TextField>
-
-
-
+                            <Box >
+                                <Typography variant="h3" sx={{ fontSize: 15 }}>Payee Addresses (comma seperated):</Typography>
+                                <TextField fullWidth id="setAddress" variant="filled" onChange={handleAddressChange} ></TextField>
                             </Box>
-                        </form>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th>Payee Addresses</th>
-                                    <th>Shares Allocated</th>
-                                </tr>
-                                {payees ? (payees.map((item) => {
-                                    itemCount++;
-                                    return (
+                            <TableContainer>
+                                <Table sx={{ border: 2 }}>
+                                    <TableHead>
+                                        <TableRow sx={{ border: 2 }}>
+                                            <TableCell> <Typography>Payee Addresses</Typography></TableCell>
+                                            <TableCell><Typography>Shares Allocated</Typography> </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
 
-                                        <tr key={itemCount}>
-                                            <td >{item}</td>
-                                            <td><TextField id="setPayRatio" variant="filled" onChange={handleRatioChange}></TextField></td>
-                                        </tr>
+                                        {payees ? (payees.map((item) => {
+                                            itemCount++;
+                                            return (
 
-
-                                    )
-                                })) : (
-                                    <tr></tr>
-                                )
-                                }
-                            </tbody>
-                        </table>
-
-                        {
-                            payeeratio !== null && payees !== null ?
-                                (<Box p={5}><Button onClick={previewContract} color="error" variant="contained">Preview Contract</Button></Box>) :
-                                (null)
-                        }
+                                                <TableRow key={itemCount} >
+                                                    <TableCell >{item}</TableCell>
+                                                    <TableCell><TextField id="setPayRatio" variant="filled" onChange={handleRatioChange}></TextField></TableCell>
+                                                </TableRow>
 
 
+                                            )
+                                        })) : (
+                                            null
+                                        )
+                                        }
+
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+
+
+                            {
+                                payeeratio !== null && payees !== null ?
+                                    (<Box p={2}><Button onClick={previewContract} color="error" variant="contained">Preview Contract</Button></Box>) :
+                                    (null)
+                            }
+
+
+
+                        </Card>
 
                     </Box>
-
-
 
 
                 ) :
