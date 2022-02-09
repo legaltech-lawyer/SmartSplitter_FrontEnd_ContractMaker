@@ -5,7 +5,7 @@ import SmartSplitterFactoryABI from "../chain-info/contracts/SmartSplitterFactor
 
 const SmartSplitterFactory = () => {
 
-    const smartSplitterFactoryAddress = "0xb4B1580046F0b8574d43bf5ecAf80CB5c5d0230A"
+    const smartSplitterFactoryAddress = "0xD9bA3054EA49c9cA48143bFf078Cbd2105224422"
     const { abi } = SmartSplitterFactoryABI
 
     const [connButtonText, setConnButtonText] = useState('Connect Wallet');
