@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { List, ListItem, ListItemText, Button, Container, CircularProgress, Box, TextField, Snackbar, Alert, Link, Typography, Card, CardContent, TableContainer, TableHead, Table, TableRow, TableCell, TableBody } from "@mui/material"
-import { ethers, constants, utils } from 'ethers'
+import { List, ListItem, ListItemText, Button, CircularProgress, Box, TextField, Snackbar, Alert, Link, Typography, Card, CardContent, TableContainer, TableHead, Table, TableRow, TableCell, TableBody } from "@mui/material"
+import { ethers } from 'ethers'
 import SmartSplitterFactoryABI from "../chain-info/contracts/SmartSplitterFactory.json"
 
 const SmartSplitterFactory = () => {

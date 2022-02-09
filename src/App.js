@@ -1,6 +1,6 @@
 import './App.css';
 import SmartSplitterFactory from './components/SmartSplitterFactory';
-import { createTheme, ThemeProvider, Paper, Container } from "@mui/material"
+import { createTheme, ThemeProvider, Container } from "@mui/material"
 
 let theme = createTheme({
   palette: {
