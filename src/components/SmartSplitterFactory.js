@@ -157,11 +157,21 @@ const SmartSplitterFactory = () => {
     const handleAddressChange = (event) => {
         // setPayees(event.target.value)
         const result = processPayeeAddressText(event.target.value)
+        console.log(result)
         setPayees(result)
+        
     }
 
     const processPayeeAddressText = (payeeText) => {
-        return payeeText.split(",")
+        
+        let temp = payeeText.split(",")
+        let output = []
+        for (let i = 0; i<temp.length; i++){
+            let current = temp[i]
+            let trimmedval = current.trim()
+            output.push(trimmedval)
+        }
+       return output
     }
 
     const handleRatioChange = (event) => {
@@ -189,6 +199,8 @@ const SmartSplitterFactory = () => {
         setProcessing(true)
 
         try {
+            console.log("attempt")
+            console.log(payees)
             const tx = await contract.createSmartSplitterContract(payees, payeeratio)
             let hash = tx.hash
             setTxHash(hash.toString())
@@ -196,6 +208,7 @@ const SmartSplitterFactory = () => {
 
         }
         catch {
+            console.log("catch initiated")
             setProcessing(false)
         }
 
@@ -244,6 +257,7 @@ const SmartSplitterFactory = () => {
 
     const createContractEvent = (event) => {
         event.preventDefault()
+        console.log("creating contract")
         createContract()
     }
 
